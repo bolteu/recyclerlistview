@@ -13,7 +13,8 @@
             "call-signature",
             "property-declaration"
         ],
-        "max-classes-per-file":false,
+        "align": false,
+        "max-classes-per-file": false,
         "typeof-compare": true,
         "interface-name": false,
         "variable-name": false,

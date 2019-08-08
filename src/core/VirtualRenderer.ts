@@ -53,9 +53,10 @@ export default class VirtualRenderer {
     private _dimensions: Dimension | null;
 
     constructor(renderStackChanged: (renderStack: RenderStack) => void,
-                scrollOnNextUpdate: (point: Point) => void,
-                fetchStableId: StableIdProvider,
-                isRecyclingEnabled: boolean) {
+        scrollOnNextUpdate: (point: Point) => void,
+        fetchStableId: StableIdProvider,
+        isRecyclingEnabled: boolean,
+    ) {
         //Keeps track of items that need to be rendered in the next render cycle
         this._renderStack = {};
 
@@ -120,10 +121,10 @@ export default class VirtualRenderer {
         this._dimensions = dim;
     }
 
-    public setLayoutManager(layoutManager: LayoutManager): void {
+    public setLayoutManager(layoutManager: LayoutManager, rows: any[]): void {
         this._layoutManager = layoutManager;
         if (this._params) {
-            this._layoutManager.relayoutFromIndex(0, this._params.itemCount);
+            this._layoutManager.relayoutFromIndex(0, this._params.itemCount, rows);
         }
     }
 

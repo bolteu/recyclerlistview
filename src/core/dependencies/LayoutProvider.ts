@@ -27,13 +27,13 @@ export abstract class BaseLayoutProvider {
 
     //Check if given dimension contradicts with your layout provider, return true for mismatches. Returning true will
     //cause a relayout to fix the discrepancy
-    public abstract checkDimensionDiscrepancy(dimension: Dimension, type: string | number, index: number): boolean;
+    public abstract checkDimensionDiscrepancy(dimension: Dimension, type: string | number, index: number, rows: any[]): boolean;
 }
 
 export class LayoutProvider extends BaseLayoutProvider {
 
     private _getLayoutTypeForIndex: (index: number) => string | number;
-    private _setLayoutForType: (type: string | number, dim: Dimension, index: number) => void;
+    private _setLayoutForType: (type: string | number, dim: Dimension, index: number, rows: any[]) => void;
     private _tempDim: Dimension;
     private _lastLayoutManager: WrapGridLayoutManager | undefined;
 
@@ -56,13 +56,13 @@ export class LayoutProvider extends BaseLayoutProvider {
 
     //Given a type and dimension set the dimension values on given dimension object
     //You can also get index here if you add an extra argument but we don't recommend using it.
-    public setComputedLayout(type: string | number, dimension: Dimension, index: number): void {
-        return this._setLayoutForType(type, dimension, index);
+    public setComputedLayout(type: string | number, dimension: Dimension, index: number, rows: any[]): void {
+        return this._setLayoutForType(type, dimension, index, rows);
     }
 
-    public checkDimensionDiscrepancy(dimension: Dimension, type: string | number, index: number): boolean {
+    public checkDimensionDiscrepancy(dimension: Dimension, type: string | number, index: number, rows: any[]): boolean {
         const dimension1 = dimension;
-        this.setComputedLayout(type, this._tempDim, index);
+        this.setComputedLayout(type, this._tempDim, index, rows);
         const dimension2 = this._tempDim;
         if (this._lastLayoutManager) {
             this._lastLayoutManager.setMaxBounds(dimension2);

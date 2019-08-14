@@ -41,6 +41,9 @@
     "react": ">= 15.2.1",
     "react-native": ">= 0.30.0"
   },
+  "publishConfig": {
+    "registry": "http://npm.internal:4873"
+  },
   "devDependencies": {
     "@types/lodash.debounce": "4.0.3",
     "@types/prop-types": "15.5.2",

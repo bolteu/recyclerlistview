@@ -62,6 +62,8 @@ export default class ScrollComponent extends BaseScrollComponent {
                 {...this.props}
                 horizontal={this.props.isHorizontal}
                 onScroll={this._onScroll}
+                onScrollEndDrag={this._onScrollEndDrag}
+                onMomentumScrollEnd={this._onMomentumScrollEnd}
                 onLayout={(!this._isSizeChangedCalledOnce || this.props.canChangeSize) ? this._onLayout : this.props.onLayout}>
                 <View style={{ flexDirection: this.props.isHorizontal ? "row" : "column" }}>
                     <View style={{
@@ -81,6 +83,16 @@ export default class ScrollComponent extends BaseScrollComponent {
     private _onScroll = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {
         if (event) {
             this.props.onScroll(event.nativeEvent.contentOffset.x, event.nativeEvent.contentOffset.y, event);
+        }
+    }
+    private _onScrollEndDrag = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {
+        if (event && this.props.onScrollEndDrag) {
+            this.props.onScrollEndDrag(event.nativeEvent.contentOffset.x, event.nativeEvent.contentOffset.y, event);
+        }
+    }
+    private _onMomentumScrollEnd = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {
+        if (event && this.props.onMomentumScrollEnd) {
+            this.props.onMomentumScrollEnd(event.nativeEvent.contentOffset.x, event.nativeEvent.contentOffset.y, event);
         }
     }
 

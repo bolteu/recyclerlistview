@@ -83,6 +83,8 @@ export interface RecyclerListViewProps {
     renderAheadOffset?: number;
     isHorizontal?: boolean;
     onScroll?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onScrollEndDrag?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onMomentumScrollEnd?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
     onRecreate?: (params: OnRecreateParams) => void;
     onEndReached?: () => void;
     onEndReachedThreshold?: number;
@@ -362,6 +364,8 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
                 {...this.props}
                 {...this.props.scrollViewProps}
                 onScroll={this._onScroll}
+                onScrollEndDrag={this._onScrollEndDrag}
+                onMomentumScrollEnd={this._onMomentumScrollEnd}
                 onSizeChanged={this._onSizeChanged}
                 contentHeight={this._initComplete ? this._virtualRenderer.getLayoutDimension().height : 0}
                 contentWidth={this._initComplete ? this._virtualRenderer.getLayoutDimension().width : 0}>
@@ -597,6 +601,18 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
         this._processOnEndReached();
     }
 
+    private _onScrollEndDrag = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onScrollEndDrag) {
+            this.props.onScrollEndDrag(rawEvent, offsetX, offsetY);
+        }
+    }
+
+    private _onMomentumScrollEnd = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onMomentumScrollEnd) {
+            this.props.onMomentumScrollEnd(rawEvent, offsetX, offsetY);
+        }
+    }
+
     private _processOnEndReached(): void {
         if (this.props.onEndReached && this._virtualRenderer) {
             const layout = this._virtualRenderer.getLayoutDimension();
@@ -643,6 +659,12 @@ RecyclerListView.propTypes = {
 
     //On scroll callback onScroll(rawEvent, offsetX, offsetY), note you get offsets no need to read scrollTop/scrollLeft
     onScroll: PropTypes.func,
+
+    //Fires when a user has finished scrolling. onScrollEndDrag(rawEvent, offsetX, offsetY)
+    onScrollEndDrag: PropTypes.func,
+
+    //Fires when scroll view has finished moving onMomentumScrollEnd(rawEvent, offsetX, offsetY)
+    onMomentumScrollEnd: PropTypes.func,
 
     //callback onRecreate(params), when recreating recycler view from context provider. Gives you the initial params in the first
     //frame itself to allow you to render content accordingly

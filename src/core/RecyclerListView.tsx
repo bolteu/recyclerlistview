@@ -83,6 +83,7 @@ export interface RecyclerListViewProps {
     renderAheadOffset?: number;
     isHorizontal?: boolean;
     onScroll?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onScrollBeginDrag?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
     onScrollEndDrag?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
     onMomentumScrollEnd?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
     onRecreate?: (params: OnRecreateParams) => void;
@@ -364,6 +365,7 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
                 {...this.props}
                 {...this.props.scrollViewProps}
                 onScroll={this._onScroll}
+                onScrollBeginDrag={this._onScrollBeginDrag}
                 onScrollEndDrag={this._onScrollEndDrag}
                 onMomentumScrollEnd={this._onMomentumScrollEnd}
                 onSizeChanged={this._onSizeChanged}
@@ -601,6 +603,12 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
         this._processOnEndReached();
     }
 
+    private _onScrollBeginDrag = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onScrollBeginDrag) {
+            this.props.onScrollBeginDrag(rawEvent, offsetX, offsetY);
+        }
+    }
+
     private _onScrollEndDrag = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
         if (this.props.onScrollEndDrag) {
             this.props.onScrollEndDrag(rawEvent, offsetX, offsetY);
@@ -659,6 +667,9 @@ RecyclerListView.propTypes = {
 
     //On scroll callback onScroll(rawEvent, offsetX, offsetY), note you get offsets no need to read scrollTop/scrollLeft
     onScroll: PropTypes.func,
+
+    //Fires when a user has started scrolling. onScrollBeginDrag(rawEvent, offsetX, offsetY)
+    onScrollBeginDrag: PropTypes.func,
 
     //Fires when a user has finished scrolling. onScrollEndDrag(rawEvent, offsetX, offsetY)
     onScrollEndDrag: PropTypes.func,

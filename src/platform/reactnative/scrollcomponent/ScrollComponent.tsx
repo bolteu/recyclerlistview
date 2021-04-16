@@ -62,6 +62,7 @@ export default class ScrollComponent extends BaseScrollComponent {
                 {...this.props}
                 horizontal={this.props.isHorizontal}
                 onScroll={this._onScroll}
+                onScrollBeginDrag={this._onScrollBeginDrag}
                 onScrollEndDrag={this._onScrollEndDrag}
                 onMomentumScrollEnd={this._onMomentumScrollEnd}
                 onLayout={(!this._isSizeChangedCalledOnce || this.props.canChangeSize) ? this._onLayout : this.props.onLayout}>
@@ -83,6 +84,11 @@ export default class ScrollComponent extends BaseScrollComponent {
     private _onScroll = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {
         if (event) {
             this.props.onScroll(event.nativeEvent.contentOffset.x, event.nativeEvent.contentOffset.y, event);
+        }
+    }
+    private _onScrollBeginDrag = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {
+        if (event && this.props.onScrollBeginDrag) {
+            this.props.onScrollBeginDrag(event.nativeEvent.contentOffset.x, event.nativeEvent.contentOffset.y, event);
         }
     }
     private _onScrollEndDrag = (event?: NativeSyntheticEvent<NativeScrollEvent>): void => {

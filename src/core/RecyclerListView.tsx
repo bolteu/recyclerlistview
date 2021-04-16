@@ -83,6 +83,9 @@ export interface RecyclerListViewProps {
     renderAheadOffset?: number;
     isHorizontal?: boolean;
     onScroll?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onScrollBeginDrag?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onScrollEndDrag?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
+    onMomentumScrollEnd?: (rawEvent: ScrollEvent, offsetX: number, offsetY: number) => void;
     onRecreate?: (params: OnRecreateParams) => void;
     onEndReached?: () => void;
     onEndReachedThreshold?: number;
@@ -103,6 +106,7 @@ export interface RecyclerListViewProps {
     optimizeForInsertDeleteAnimations?: boolean;
     style?: object | number;
     debugHandlers?: DebugHandlers;
+    decelerationRate?: "fast" | "normal" | number;
 
     //For all props that need to be proxied to inner/external scrollview. Put them in an object and they'll be spread
     //and passed down. For better typescript support.
@@ -361,7 +365,11 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
                 ref={(scrollComponent) => this._scrollComponent = scrollComponent as BaseScrollComponent | null}
                 {...this.props}
                 {...this.props.scrollViewProps}
+
                 onScroll={this._onScroll}
+                onScrollBeginDrag={this._onScrollBeginDrag}
+                onScrollEndDrag={this._onScrollEndDrag}
+                onMomentumScrollEnd={this._onMomentumScrollEnd}
                 onSizeChanged={this._onSizeChanged}
                 contentHeight={this._initComplete ? this._virtualRenderer.getLayoutDimension().height : 0}
                 contentWidth={this._initComplete ? this._virtualRenderer.getLayoutDimension().width : 0}>
@@ -597,6 +605,24 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
         this._processOnEndReached();
     }
 
+    private _onScrollBeginDrag = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onScrollBeginDrag) {
+            this.props.onScrollBeginDrag(rawEvent, offsetX, offsetY);
+        }
+    }
+
+    private _onScrollEndDrag = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onScrollEndDrag) {
+            this.props.onScrollEndDrag(rawEvent, offsetX, offsetY);
+        }
+    }
+
+    private _onMomentumScrollEnd = (offsetX: number, offsetY: number, rawEvent: ScrollEvent): void => {
+        if (this.props.onMomentumScrollEnd) {
+            this.props.onMomentumScrollEnd(rawEvent, offsetX, offsetY);
+        }
+    }
+
     private _processOnEndReached(): void {
         if (this.props.onEndReached && this._virtualRenderer) {
             const layout = this._virtualRenderer.getLayoutDimension();
@@ -643,6 +669,15 @@ RecyclerListView.propTypes = {
 
     //On scroll callback onScroll(rawEvent, offsetX, offsetY), note you get offsets no need to read scrollTop/scrollLeft
     onScroll: PropTypes.func,
+
+    //Fires when a user has started scrolling. onScrollBeginDrag(rawEvent, offsetX, offsetY)
+    onScrollBeginDrag: PropTypes.func,
+
+    //Fires when a user has finished scrolling. onScrollEndDrag(rawEvent, offsetX, offsetY)
+    onScrollEndDrag: PropTypes.func,
+
+    //Fires when scroll view has finished moving onMomentumScrollEnd(rawEvent, offsetX, offsetY)
+    onMomentumScrollEnd: PropTypes.func,
 
     //callback onRecreate(params), when recreating recycler view from context provider. Gives you the initial params in the first
     //frame itself to allow you to render content accordingly
@@ -720,4 +755,10 @@ RecyclerListView.propTypes = {
     //For all props that need to be proxied to inner/external scrollview. Put them in an object and they'll be spread
     //and passed down.
     scrollViewProps: PropTypes.object,
+
+    // A floating-point number that determines how quickly the scroll view
+    // decelerates after the user lifts their finger. Reasonable choices include
+    //   - Normal: 0.998 (the default)
+    //   - Fast: 0.9
+    decelerationRate: PropTypes.oneOf(["fast", "normal", PropTypes.number]),
 };

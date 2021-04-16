@@ -5,6 +5,9 @@ import BaseScrollView, { ScrollEvent, ScrollViewDefaultProps } from "./BaseScrol
 export interface ScrollComponentProps {
     onSizeChanged: (dimensions: Dimension) => void;
     onScroll: (offsetX: number, offsetY: number, rawEvent: ScrollEvent) => void;
+    onScrollBeginDrag?: (offsetX: number, offsetY: number, rawEvent: ScrollEvent) => void;
+    onScrollEndDrag?: (offsetX: number, offsetY: number, rawEvent: ScrollEvent) => void;
+    onMomentumScrollEnd?: (offsetX: number, offsetY: number, rawEvent: ScrollEvent) => void;
     contentHeight: number;
     contentWidth: number;
     canChangeSize?: boolean;
@@ -14,6 +17,7 @@ export interface ScrollComponentProps {
     scrollThrottle?: number;
     useWindowScroll?: boolean;
     onLayout?: any;
+    decelerationRate?: "fast" | "normal" | number;
 }
 export default abstract class BaseScrollComponent extends React.Component<ScrollComponentProps, {}> {
     public abstract scrollTo(x: number, y: number, animate: boolean): void;

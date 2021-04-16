@@ -106,6 +106,7 @@ export interface RecyclerListViewProps {
     optimizeForInsertDeleteAnimations?: boolean;
     style?: object | number;
     debugHandlers?: DebugHandlers;
+    decelerationRate?: "fast" | "normal" | number;
 
     //For all props that need to be proxied to inner/external scrollview. Put them in an object and they'll be spread
     //and passed down. For better typescript support.
@@ -364,6 +365,7 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
                 ref={(scrollComponent) => this._scrollComponent = scrollComponent as BaseScrollComponent | null}
                 {...this.props}
                 {...this.props.scrollViewProps}
+
                 onScroll={this._onScroll}
                 onScrollBeginDrag={this._onScrollBeginDrag}
                 onScrollEndDrag={this._onScrollEndDrag}
@@ -753,4 +755,10 @@ RecyclerListView.propTypes = {
     //For all props that need to be proxied to inner/external scrollview. Put them in an object and they'll be spread
     //and passed down.
     scrollViewProps: PropTypes.object,
+
+    // A floating-point number that determines how quickly the scroll view
+    // decelerates after the user lifts their finger. Reasonable choices include
+    //   - Normal: 0.998 (the default)
+    //   - Fast: 0.9
+    decelerationRate: PropTypes.oneOf(["fast", "normal", PropTypes.number]),
 };

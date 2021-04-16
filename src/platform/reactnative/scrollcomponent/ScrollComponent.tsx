@@ -65,6 +65,7 @@ export default class ScrollComponent extends BaseScrollComponent {
                 onScrollBeginDrag={this._onScrollBeginDrag}
                 onScrollEndDrag={this._onScrollEndDrag}
                 onMomentumScrollEnd={this._onMomentumScrollEnd}
+                decelerationRate={this.props.decelerationRate}
                 onLayout={(!this._isSizeChangedCalledOnce || this.props.canChangeSize) ? this._onLayout : this.props.onLayout}>
                 <View style={{ flexDirection: this.props.isHorizontal ? "row" : "column" }}>
                     <View style={{

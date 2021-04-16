@@ -17,6 +17,7 @@ export interface ScrollComponentProps {
     scrollThrottle?: number;
     useWindowScroll?: boolean;
     onLayout?: any;
+    decelerationRate?: "fast" | "normal" | number;
 }
 export default abstract class BaseScrollComponent extends React.Component<ScrollComponentProps, {}> {
     public abstract scrollTo(x: number, y: number, animate: boolean): void;
